@@ -22,7 +22,6 @@ describe('exchange rates', () => {
     // await driver.sleep(1000);
   });
 
-  // Remove .only and implement others test cases!
   it('create a new exchange rate between USD and EUR', async () => {
     // Click in exchange rates in side menu
     await driver.findElement(By.linkText('Exchange rates')).click();
@@ -45,6 +44,66 @@ describe('exchange rates', () => {
     // Assert that exchange rate has been created
     const bodyText = await driver.findElement(By.tagName('body')).getText();
     assert(bodyText.includes('Exchange rate has been successfully created.'));
+  });
+
+  it('create duplicated exchange rate', async () => {
+    // Click in exchange rates in side menu
+    await driver.findElement(By.css('a[href="/admin/exchange-rates/"]')).click();
+    // Click on create button
+    await driver.findElement(By.css('*[class^="ui labeled icon button  primary "]')).click();
+    // Select US Dollar Source currency
+    const dropdown = await driver.findElement(By.id('sylius_exchange_rate_sourceCurrency'));
+    await dropdown.findElement(By.xpath("//option[. = 'US Dollar']")).click();
+    // Type ratio to 5
+    await driver.findElement(By.id('sylius_exchange_rate_ratio')).sendKeys('5');
+    // Click on create button
+    await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
+    // Assert that exchange rate creation failed
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('The currency pair must be unique.'));
+  });
+
+  it('create exchange rate with same target and source currencies', async () => {
+    // Click in exchange rates in side menu
+    await driver.findElement(By.css('a[href="/admin/exchange-rates/"]')).click();
+    // Click on create button
+    await driver.findElement(By.css('*[class^="ui labeled icon button  primary "]')).click();
+    // Type ratio to 5
+    await driver.findElement(By.id('sylius_exchange_rate_ratio')).sendKeys('5');
+    // Click on create button
+    await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
+    // Assert that exchange rate creation failed
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('The source and target currencies must differ.'));
+  });
+
+  it('create exchange rate without ratio', async () => {
+    // Click in exchange rates in side menu
+    await driver.findElement(By.css('a[href="/admin/exchange-rates/"]')).click();
+    // Click on create button
+    await driver.findElement(By.css('*[class^="ui labeled icon button  primary "]')).click();
+    // Select US Dollar Source currency
+    const dropdown = await driver.findElement(By.id('sylius_exchange_rate_sourceCurrency'));
+    await dropdown.findElement(By.xpath("//option[. = 'US Dollar']")).click();
+    // Click on create button
+    await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
+    // Assert that exchange rate creation failed
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('Please enter exchange rate ratio.'));
+  });
+
+  it('edits the exchange rate created', async () => {
+    // Click in exchange rates in side menu
+    await driver.findElement(By.css('a[href="/admin/exchange-rates/"]')).click(); 
+    // Click on create button
+    await driver.findElement(By.css('*[class^="icon pencil"]')).click();
+    // Type ratio to 10
+    await driver.findElement(By.id('sylius_exchange_rate_ratio')).sendKeys('10');
+    // Click on create button
+    await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
+    // Assert that exchange rate has been updated
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('Exchange rate has been successfully updated.'));
   });
 
   it('deletes the exchange rate created', async () => {
