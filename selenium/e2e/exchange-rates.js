@@ -52,8 +52,6 @@ describe('exchange rates', () => {
     
     const deleteButton = await driver.findElements(By.css('body > div.admin-layout.admin-layout--open > div.admin-layout__body > div.admin-layout__content > div.sylius-grid-wrapper > div.ui.segment.spaceless.sylius-grid-table-wrapper > table > tbody > tr > td:nth-child(5) > div > form > button'));
     await deleteButton[0].click();
-
-    await driver.findElement(By.css('body > div.admin-layout.admin-layout--open > div.admin-layout__body > div.admin-layout__content > div.sylius-grid-wrapper > div.ui.segment.spaceless.sylius-grid-table-wrapper > table > tbody > tr > td:nth-child(5) > div > form > button')).click();
     
     const okButton = await driver.findElements(By.css('*[class^="ui green ok inverted button"]'));
     await okButton[0].click();
@@ -99,9 +97,9 @@ describe('exchange rates', () => {
     const filterButton = await driver.findElements(By.css('*[class^="icon search"]'));
     await filterButton[0].click();
 
-    const table = await driver.findElements(By.tagName('table'));
+    const table = await driver.findElement(By.tagName('table')).getText();
     
-    assert(!(table[0].includes('US Dollar')));
+    assert(!(table.includes('US Dollar')));
   });
   
   it('clear filters', async () => {
@@ -110,13 +108,13 @@ describe('exchange rates', () => {
     const clearFilterButton = await driver.findElements(By.css('*[class^="icon remove"]'));
     await clearFilterButton[0].click();
 
-    const table = await driver.findElements(By.tagName('table'));
+    const table = await driver.findElement(By.tagName('table')).getText();
 
-    assert((table[0].includes('Canadian Dollar')));
-    assert((table[0].includes('US Dollar')));
+    assert((table.includes('Canadian Dollar')));
+    assert((table.includes('US Dollar')));
   });
 
-  it.skip('delete selected rate', async () => {
+  it('delete selected rate', async () => {
     await driver.findElement(By.linkText('Exchange rates')).click();
 
     const createButton = await driver.findElements(By.css('*[class^="ui labeled icon button  primary "]'));
@@ -142,9 +140,9 @@ describe('exchange rates', () => {
     const okButton = await driver.findElements(By.css('*[class^="ui green ok inverted button"]'));
     await okButton[0].click();
 
-    const table = await driver.findElements(By.tagName('table'));
+    const table = await driver.findElement(By.tagName('table')).getText();
     
-    assert(!(table[0].includes('New Zealand Dollar')));
+    assert(!(table.includes('New Zealand Dollar')));
   });
   
   it('delete all rates', async () => {
