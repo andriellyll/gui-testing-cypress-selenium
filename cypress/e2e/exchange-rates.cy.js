@@ -173,5 +173,4 @@ describe('exchange rates', () => {
 
     cy.get('body').should('contain', 'There are no results to display');
   });
-  // Implement the remaining test cases in a similar manner
 });
